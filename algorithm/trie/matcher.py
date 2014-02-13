@@ -1,6 +1,7 @@
 # encoding=utf-8
 
 from .trie import *
+import copy
 
 # 仅支持utf-8编码
 class Matcher(object):
@@ -19,9 +20,7 @@ class ForwardMaxMatcher(Matcher):
         for idx,word in enumerate(sentence):
             if idx >= length - 1:
                 isLast = True
-
             self.addWords(word,idx,isLast)
-
         return self.queue
 
     def addWords(self,word,idx=0,isLast=False):
@@ -35,21 +34,28 @@ class ForwardMaxMatcher(Matcher):
 
         for words in self.queue:
             result = Trie.match(words)
+
             if self.cantContinue(result):
                 continue
             if self.isInnerWord(words,match_start,match_end):
                 continue
+            if -1 == words['end_pos']:
+                result.append(words)
+
+            if isLast or result['isWord']:
+                match_end = idx
             
+            if result['isWord'] and words['start_pos'] > match_start :
+                match_start     = words['start_pos']
+
             words['dict']    = result['dict']
             words['words']  += word
-
-            if result['isWord'] and (isLast or -1 == match_start) :
-                match_start     = words['start_pos']
-                match_end       = words['end_pos']
-                words['end_pos']= idx
-
             result.append(words)
 
+            if result['isWord'] and result['continue']:
+                temp = copy.copy(words)
+                temp['end_pos']= idx
+                result.append(temp)
         self.queue = result
 
     def cantContinue(self,result):
