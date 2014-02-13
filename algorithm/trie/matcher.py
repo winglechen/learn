@@ -20,73 +20,84 @@ class ForwardMaxMatcher(Matcher):
         for idx,word in enumerate(sentence):
             if idx >= length - 1:
                 isLast = True
-            self.addWords(word,idx,isLast)
+            self.addWord(word,idx)
+            self.matching(word,idx,isLast)
         return self.queue
 
-    def addWords(self,word,idx=0,isLast=False):
-        self.addWord(word,idx)
-        self.matching(word,idx,isLast)
-
     def matching(self,word,idx=0,isLast=False):
-        result      = []
-        match_start = -1
-        match_end   = -1
-
+        match = {
+            'result'    : [],
+            'start'     : -1,
+            'end'       : -1
+        }
         for words in self.queue:
             result = Trie.match(words)
 
-            if self.cantContinue(result):
+            if self.cantContinue(result,words,match):
                 continue
-            if self.isInnerWord(words,match_start,match_end):
+            if self.addMatchedWords(words,match)
                 continue
-            if -1 == words['end_pos']:
-                result.append(words)
 
+            self.setMatchBoundary(isLast,words,match,idx)
+            self.addMatchingWords(words,result,match)
+            self.addInnerWords(words,result,match,idx)
+
+            self.queue = match['result']
+
+    def addMatchedWords(self,words,match):
+        if -1 != words['end']:
+            match['result'].append(words)
+            return True
+        return False
+
+    def addMatchingWords(self,words,result,match):
+        words['dict']    = result['dict']
+        words['words']  += word
+        match['result'].append(words)
+
+    def addInnerWords(self,words,result,match,idx):
+        if result['isWord'] and result['continue']:
+            temp = copy.copy(words)
+            temp['end']= idx
+            match['result'].append(temp)
+
+    def setMatchBoundary(self,isLast,words,match,idx):
             if isLast or result['isWord']:
-                match_end = idx
+                match['end'] = idx
             
-            if result['isWord'] and words['start_pos'] > match_start :
-                match_start     = words['start_pos']
+            if result['isWord'] and words['start'] > match['start'] :
+                match['start'] = words['start']
 
-            words['dict']    = result['dict']
-            words['words']  += word
-            result.append(words)
-
-            if result['isWord'] and result['continue']:
-                temp = copy.copy(words)
-                temp['end_pos']= idx
-                result.append(temp)
-        self.queue = result
-
-    def cantContinue(self,result):
+    def cantContinue(self,result,words,match):
         if not result['match']:
             return True 
 
         if isLast and not result['isWord']:
             return True
 
+        if self.isInnerWord(words,match):
+            return True
+
         return False
 
-    def isInnerWord(self,words,start,end):
-        if -1 == start || -1 == end:
+    def isInnerWord(self,words,match):
+        if -1 == match['start'] || -1 == match['end']:
             return False
 
-        if words['start_pos'] > start:
+        if words['start'] > match['start']:
             return True
 
-        if words['end_pos'] < end:
+        if words['end'] < match['end']:
             return True
 
         return False
-
-
 
     def addWord(self,word,idx=0):
         self.queue.append({
-            'start_pos' : idx,
-            'end_pos'   : -1,
-            'words'     : '',
-            'dict'      : None
+            'start' : idx,
+            'end'   : -1,
+            'words' : '',
+            'dict'  : None
         })
 
 
