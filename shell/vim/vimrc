@@ -1,0 +1,101 @@
+"set binary
+syntax on
+set showmatch
+set nocompatible
+set nu
+set autoindent
+set smartindent
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autochdir
+set nobackup
+set foldenable
+set foldmethod=marker
+set hlsearch
+set formatoptions=tcqro
+
+"当前行提示线
+set cursorline
+
+"scheme
+"set background=dark
+"colorscheme solarized
+
+set fileformats=unix,dos,mac
+set fileformat=unix
+set noendofline
+
+map <F1> :tabnext<CR>
+map <F2> :tabprevious<CR>
+map <F3> :tabnew<CR>
+
+" press v to start visual block mod
+nnoremap q <c-v>
+
+"关闭括号高亮匹配
+"let loaded_matchparen = 1
+
+
+set encoding=utf-8
+set fileencodings=utf-8,chinese,latin-1
+if has("win32")
+    set fileencoding=utf-8
+else
+    set fileencoding=utf-8
+endif
+
+
+language messages zh_CN.utf-8
+
+
+
+
+augroup automatic_noeol
+    au!
+    au BufWritePre  * call <SID>TempSetBinaryForNoeol()
+    au BufWritePost * call <SID>TempRestoreBinaryForNoeol()
+augroup END
+
+function! s:TempSetBinaryForNoeol()
+    let s:save_binary = &binary
+    if ! &eol && ! &binary
+        let s:save_view = winsaveview()
+        setlocal binary
+        if &ff == "dos" || &ff == "mac"
+                if line('$') > 1
+                    undojoin | exec "silent 1,$-1normal! A\<C-V>\<C-M>"
+                endif
+            endif
+            if &ff == "mac"
+                undojoin | %join!
+            " mac format does not use a \n anywhere, so we don't add one when writing
+            " in binary (which uses unix format always). However, inside the outer
+            " if statement, we already know that 'noeol' is set, so no special logic
+            " is needed.
+            endif
+        endif
+endfunction
+
+function! s:TempRestoreBinaryForNoeol()
+    if ! &eol && ! s:save_binary
+    if &ff == "dos"
+    if line('$') > 1
+    " Sometimes undojoin gives errors here, even when it shouldn't.
+    " Suppress them for now...if you can figure out and fix them instead,
+    " please update http://vim.wikia.com/wiki/VimTip1369
+    silent! undojoin | silent 1,$-1s/\r$//e
+    endif
+    elseif &ff == "mac"
+    " Sometimes undojoin gives errors here, even when it shouldn't.
+    " Suppress them for now...if you can figure out and fix them instead,
+    " please update http://vim.wikia.com/wiki/VimTip1369
+    silent! undojoin | silent %s/\r/\r/ge
+    endif
+    setlocal nobinary
+    call winrestview(s:save_view)
+    endif
+endfunction
+
+
