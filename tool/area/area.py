@@ -7,7 +7,7 @@ by Conanca
 
 import urllib2,json
 
-url_prefix = 'http://www.stats.gov.cn/tjbz/xzqhdm/'
+url_prefix = 'http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/'
 
 var_text = 'xzqh'
 code_text = 'C'
@@ -21,6 +21,7 @@ def set_proxy(proxy):
     urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler({'http' : proxy})))
 
 def get_latest_page():
+    return 'http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201401/t20140116_501070.html'
     ''' 获取最新的行政区划代码公布页 '''
     content = urllib2.urlopen(url_prefix + 'index.htm').read()
     index_start = content.find("<td width='76%' height='20' valign='middle'><a href='") + 53
