@@ -6,6 +6,11 @@
  * Time: 2:34
  */
 
+require __DIR__ . '/Worker.php';
+require __DIR__ . '/config.php';
+
+Config::set('hello','world');
+
 class Http {
     private $server     = null;
     private $request    = null;
@@ -15,21 +20,33 @@ class Http {
     {
         $server = $this->initServer();
         $self   = $this;
+
+        $server->set([
+            'worker_num'    => 4,
+            //'daemonize'     => true,
+        ]);
+
         $server->on('request',function($request,$response) use($self){
-            var_dump($request,$response);exit;
             $self->handleRequest($request,$response);
         });
+
+        $server->on('WorkerStart', function($serv, $worker_id){
+            Config::set('worker_id',$worker_id);
+            Config::set('ts',rand(0,10000));
+        });
+
         set_exception_handler([$this,'exceptionHandle']);
         $server->start();
     }
 
     private function handleRequest($request,$response)
     {
-        $this->request  = $request;
-        $this->response = $response;
-
-        ob_start();
-        $this->processRequest();
+        return (new Worker())->run($request,$response);
+//        $this->request  = $request;
+//        $this->response = $response;
+//
+//        ob_start();
+//        $this->processRequest();
     }
 
 

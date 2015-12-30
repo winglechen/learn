@@ -36,6 +36,10 @@ class Task {
         }
     }
 
+    public function result() {
+        return $this->coroutine->current();
+    }
+
     public function isFinished() {
         return !$this->coroutine->valid();
     }
@@ -59,6 +63,23 @@ class Scheduler {
         return $tid;
     }
 
+    public function killTask($tid) {
+        if(!isset($this->tashMap[$tid])) {
+            return false;
+        }
+
+        unset($this->tashMap[$tid]);
+
+        foreach ($this->taskQueue as $i => $task) {
+            if($task->getTaskId() == $tid) {
+                unset($this->taskQueue[$i]);
+                break;
+            }
+        }
+
+        return true;
+    }
+
     public function schedule(Task $task) {
         $this->taskQueue->enqueue($task);
     }
@@ -66,7 +87,12 @@ class Scheduler {
     public function run() {
         while (!$this->taskQueue->isEmpty()) {
             $task = $this->taskQueue->dequeue();
-            $task->run();
+            $retval = $task->run();
+
+            if($retval instanceof SystemCall) {
+                $retval($task, $this);
+                continue;
+            }
 
             if ($task->isFinished()) {
                 unset($this->tashMap[$task->getTaskId()]);
@@ -76,6 +102,114 @@ class Scheduler {
         }
     }
 }
+
+class SystemCall {
+    protected $callback = null;
+
+    public function __construct(Closure $callback) {
+        $this->callback = $callback;
+    }
+
+    public function __invoke(Task $task, Scheduler $scheduler) {
+        $callback = $this->callback;
+        return $callback($task, $scheduler);
+    }
+}
+
+
+function newTask(Generator $coroutine) {
+    return new SystemCall( function(Task $task, Scheduler $scheduler) use ($coroutine){
+        $task->setSendValue($scheduler->newTask($coroutine));
+        $scheduler->schedule($task);
+    });
+}
+
+function killTask($tid) {
+    return new SystemCall( function(Task $task, Scheduler $scheduler) use ($tid) {
+        $task->setSendValue($scheduler->killTask($tid));
+        $scheduler->schedule($task);
+    });
+}
+
+function getTaskId() {
+    return new SystemCall(function(Task $task, Scheduler $scheduler){
+        $task->setSendValue($task->getTaskId());
+        $scheduler->schedule($task);
+    });
+}
+
+
+class Multi {
+    public $data = [];
+    public static function newInstance() {
+        return new self();
+    }
+
+    public function add($key, Closure $callback) {
+        $cb = $this->createTask($key, $callback);
+    }
+
+    public function execute() {
+
+    }
+
+    private function createTask($key, Closure $callback) {
+        $that = $this;
+        return function () use ($that, $key, $callback) {
+            $that->data[$key] = (yield $callback());
+        };
+    }
+}
+
+
+$scheduler = new Scheduler();
+
+$scheduler->newTask(task());
+$scheduler->run();
+
+
+
+
+
+/*****************************************************************
+
+
+function childTask() {
+$tid = (yield getTaskId());
+$i = 0;
+while (true) {
+echo "child task $tid still alive!\n";
+$i++;
+yield $i;
+}
+}
+
+function task() {
+$tid = (yield getTaskId());
+$childTid = (yield newTask(childTask()));
+
+for ($i=1; $i<=6; $i++) {
+echo "Parent task $tid iteration $i\n";
+yield $i;
+
+if( 3 === $i) yield killTask($childTid);
+}
+}
+
+function task($max) {
+    $tid = (yield getTaskId());
+    for ($i=1; $i<=$max; $i++) {
+        echo "this is task $tid iteration $i.\n";
+        yield;
+    }
+}
+
+$scheduler = new Scheduler();
+
+$scheduler->newTask(task(10));
+$scheduler->newTask(task(5));
+
+$scheduler->run();
 
 function task1() {
     for ($i=0; $i<10; $i++){
@@ -91,7 +225,6 @@ function task2() {
     }
 }
 
-
 $scheduler = new Scheduler();
 
 $coroutin1 = task1();
@@ -101,3 +234,4 @@ $coroutin2 = task2();
 $scheduler->newTask($coroutin2);
 
 $scheduler->run();
+*****************************************************************/
