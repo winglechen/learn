@@ -1,0 +1,1 @@
+/www/learn/c/cmake/lesson1/build/src/CMakeFiles/hello.dir
