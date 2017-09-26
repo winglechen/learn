@@ -3,6 +3,9 @@ package com.wingle.hello;
 /**
  * Created by winglechen on 2017/9/5.
  */
+class Automoblie {}
+class Car{}
+
 public class Holder<T> {
     private T a;
 
@@ -31,7 +34,6 @@ public class Holder<T> {
     }
 }
 
-class Automoblie {}
-class Car{}
+
 
 
