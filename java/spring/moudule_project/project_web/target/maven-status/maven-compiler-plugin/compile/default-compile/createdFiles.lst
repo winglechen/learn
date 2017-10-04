@@ -1,0 +1,4 @@
+com/wingle/project/web/service/DemoService.class
+com/wingle/project/web/Application.class
+com/wingle/project/web/filter/RiskFilter.class
+com/wingle/project/web/controller/DemoController.class

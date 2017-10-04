@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="core" />
+        <module name="project_biz" />
+        <module name="project_dal" />
+        <module name="project_deploy" />
+        <module name="project_domain" />
+        <module name="project_mqworker" />
+        <module name="project_task" />
+        <module name="project_web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.8">
+      <module name="core" target="1.8" />
+      <module name="moudule_project" target="1.8" />
+      <module name="project_biz" target="1.8" />
+      <module name="project_dal" target="1.8" />
+      <module name="project_deploy" target="1.8" />
+      <module name="project_domain" target="1.8" />
+      <module name="project_mqworker" target="1.8" />
+      <module name="project_task" target="1.8" />
+      <module name="project_web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/moudule_project.iml" filepath="$PROJECT_DIR$/moudule_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_biz/project_biz.iml" filepath="$PROJECT_DIR$/project_biz/project_biz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_dal/project_dal.iml" filepath="$PROJECT_DIR$/project_dal/project_dal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_deploy/project_deploy.iml" filepath="$PROJECT_DIR$/project_deploy/project_deploy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_domain/project_domain.iml" filepath="$PROJECT_DIR$/project_domain/project_domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_mqworker/project_mqworker.iml" filepath="$PROJECT_DIR$/project_mqworker/project_mqworker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_task/project_task.iml" filepath="$PROJECT_DIR$/project_task/project_task.iml" />
+      <module fileurl="file://$PROJECT_DIR$/project_web/project_web.iml" filepath="$PROJECT_DIR$/project_web/project_web.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,30 @@
+package hello;
+
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+
+@Configurable
+@ComponentScan
+public class Application {
+
+    @Bean
+    MessageService mockMessageService() {
+        return new MessageService() {
+            @Override
+            public String getMessage() {
+                return "MessageService instance init by interface!";
+            }
+        };
+    }
+
+
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
+
+        MessagePrinter printer = context.getBean(MessagePrinter.class);
+        printer.printMessage();
+    }
+}

@@ -1,0 +1,82 @@
+package ref;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class CarTest {
+    public static Car initByDefaultConst() throws Throwable {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Class clazz = loader.loadClass("ref.Car");
+
+        Constructor cons = clazz.getDeclaredConstructor((Class[])null);
+        Car car = (Car)cons.newInstance();
+
+        Method setBrand = clazz.getMethod("setBrand", String.class);
+        setBrand.invoke(car, "雪弗兰");
+
+        Method setColor = clazz.getMethod("setColor", String.class);
+        setColor.invoke(car, "白色");
+
+        Method setMaxSpeed = clazz.getMethod("setMaxSpeed", int.class);
+        setMaxSpeed.invoke(car, 200);
+
+        return car;
+    }
+
+
+    public static void main(String[] args) throws Throwable {
+
+        Car car = new Car("chevrolet", "white", 200);
+        System.out.println("init Car :xxxxxxxxxxxxxxxxxxxxxxx");
+
+        long t0 = System.currentTimeMillis();
+        System.out.println("object actions :xxxxxxxxxxxxxxxxxxxxxxx");
+        for(int i=0; i<10000; i++){
+            objectActions(car);
+        }
+        long t1 = System.currentTimeMillis();
+
+        System.out.println("ref actions :xxxxxxxxxxxxxxxxxxxxxxx");
+        for(int i=0; i<10000; i++){
+            refActions(car);
+        }
+        long t2 = System.currentTimeMillis();
+
+        System.out.println("object actions takes : " + (t1 - t0) + " ns");
+        System.out.println("ref actions takes : " + (t2 - t1) + " ns");
+
+    }
+
+    public static void objectActions(Car car) {
+        System.out.println("brand " + car.getBrand());
+        System.out.println("color " + car.getColor());
+        System.out.println("maxSpeed " + car.getMaxSpeed());
+    }
+
+    public static void refActions(Car car) {
+        Class c = car.getClass();
+        Method[] methods = c.getMethods();
+
+        String pattern = "^get(.+)";
+        Pattern r = Pattern.compile(pattern);
+
+        for (Method m : methods) {
+            String methodName = m.getName();
+            Matcher matcher = r.matcher(methodName);
+
+            if(!matcher.find()){
+                continue;
+            }
+
+            Object ret = null;
+            try {
+                ret = m.invoke(car);
+            } catch (Exception e) {
+                System.out.println("invoke method failed: " + m.getName());
+            }
+            System.out.println(matcher.group(1) + " : " + ret );
+        }
+    }
+}

@@ -1,0 +1,10 @@
+hello/domain/Greeting.class
+hello/web/controller/GreetingController.class
+ref/Car.class
+hello/task/GithubLookupService.class
+msg/MessageService.class
+hello/task/AppRunner.class
+msg/MessagePrinter.class
+hello/Application.class
+hello/task/User.class
+hello/web/Web.class
