@@ -1,0 +1,3 @@
+/code/learn/c/monitor_object/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/code/learn/c/monitor_object/cmake-build-debug/CMakeFiles/edit_cache.dir
+/code/learn/c/monitor_object/cmake-build-debug/CMakeFiles/monitor_object.dir
