@@ -1,0 +1,1 @@
+x0 = [1; 2];t = lines(0, 50, 200);x = lsode("f", x0, t);z = plot(t, x);print(z);

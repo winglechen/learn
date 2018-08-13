@@ -1,0 +1,5 @@
+/code/learn/csharp/hello/hello/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/code/learn/csharp/hello/hello/bin/Debug/hello.exe.mdb
+/code/learn/csharp/hello/hello/bin/Debug/hello.exe
+/code/learn/csharp/hello/hello/obj/x86/Debug/hello.exe
+/code/learn/csharp/hello/hello/obj/x86/Debug/hello.exe.mdb

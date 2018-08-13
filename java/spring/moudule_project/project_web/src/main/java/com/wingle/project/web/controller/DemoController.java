@@ -1,6 +1,7 @@
 package com.wingle.project.web.controller;
 
 
+import com.wingle.project.web.model.Greeting;
 import com.wingle.project.web.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,9 @@ public class DemoController {
     private DemoService demoService;
 
     @RequestMapping("/demo/show")
-    public void show() {
+    public Greeting show() {
         System.out.println(demoService.show());
+        return new Greeting(10, "I am class greeting");
+
     }
 }

@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/code/learn/c/cpphello/hello/world.cpp
+iostream
+-
+
+/code/learn/c/cpphello/main.cpp
+iostream
+-
+
